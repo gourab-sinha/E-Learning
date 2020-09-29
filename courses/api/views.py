@@ -34,6 +34,7 @@ class CourseEnrollView(APIView):
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    lookup_field = 'id'
 
     @action(detail=True,
             methods=['post'],

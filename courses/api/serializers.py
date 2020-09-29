@@ -15,11 +15,15 @@ class ModuleSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='courses:api-course-detail',
+        lookup_field='id',
+    )
     modules = ModuleSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'subject', 'title', 'slug', 'overview',
+        fields = ['url', 'id', 'subject', 'title', 'slug', 'overview',
                   'created', 'owner', 'modules']
 
 

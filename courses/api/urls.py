@@ -5,7 +5,7 @@ from . import views
 app_name = 'courses'
 
 router = routers.DefaultRouter()
-router.register('courses', views.CourseViewSet)
+router.register('courses', views.CourseViewSet, basename='api-course')
 
 urlpatterns = [
     path('subjects/', views.SubjectListView.as_view(), name='subject_list'),
