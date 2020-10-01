@@ -13,6 +13,7 @@ from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
 from django.db.models import Count
 from django.views.generic.detail import DetailView
 from students.forms import CourseEnrollForm
+from .tasks import content_added
 
 
 
@@ -117,6 +118,12 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             if not id:
                 # new content
                 Content.objects.create(module=self.module, item=obj)
+
+            # Asynchronous Task
+            information = {'name': self.request.user.first_name, 'course': self.module.course.title,
+                           'module': self.module.title, 'content': obj.title, 'email': self.request.user.email}
+
+            content_added.delay(information)
 
             return redirect('course:module_content_list', self.module.id)
 

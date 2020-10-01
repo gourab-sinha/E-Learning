@@ -8,6 +8,7 @@ from .forms import CourseEnrollForm
 from django.views.generic.list import ListView
 from courses.models import Course
 from django.views.generic.detail import DetailView
+from .tasks import course_registered
 
 
 class StudentRegistrationView(CreateView):
@@ -31,11 +32,15 @@ class StudentEnrollCourseView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         self.course = form.cleaned_data['course']
         self.course.students.add(self.request.user)
-        print(self.course)
+
         return super().form_valid(form)
 
     def get_success_url(self):
-        print(self.course)
+
+        student = {'email': self.request.user.email, 'first_name': self.request.user.first_name,
+                   'course': self.course.title}
+        course_registered.delay(student)
+
         return reverse_lazy('students:student_course_detail', args=[self.course.id])
 
 
@@ -45,6 +50,7 @@ class StudentCourseListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
+        print(qs)
         return qs.filter(students__in=[self.request.user])
 
 

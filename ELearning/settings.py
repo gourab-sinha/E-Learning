@@ -25,7 +25,7 @@ SECRET_KEY = '==uvc3uxz4-o=q02r86fb-lghjerdl_s3z55v8+9p6zhgxa-jk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -150,3 +150,17 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_PASS')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_EMAIL')
+
+
+CELERY_BROKER_URL = 'redis://h:pb8a7902af2fd154a8fce8e78aa23de95fbd906626314c0fedd77dc52e3154a50@ec2-35-170-115-149.compute-1.amazonaws.com:16179'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
